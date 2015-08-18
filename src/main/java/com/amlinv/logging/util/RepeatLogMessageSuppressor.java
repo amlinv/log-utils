@@ -23,8 +23,18 @@ import java.util.Map;
  * Created by art on 4/5/15.
  */
 public class RepeatLogMessageSuppressor {
+    public static final long DEFAULT_MIN_DELAY = 300000L;
+
     private long lastLoggedTime = 0;
-    private long minDelay = 300000L;
+    private long minDelay = DEFAULT_MIN_DELAY;
+
+    public long getMinDelay() {
+        return minDelay;
+    }
+
+    public void setMinDelay(long minDelay) {
+        this.minDelay = minDelay;
+    }
 
     public void debug (Logger destLogger, String message, Object... args) {
         long nowMs = System.nanoTime() / 1000000L;
@@ -61,7 +71,7 @@ public class RepeatLogMessageSuppressor {
         long elapsed = nowMs - lastLoggedTime;
 
         if ( elapsed > minDelay ) {
-            destLogger.warn(message, args);
+            destLogger.error(message, args);
             lastLoggedTime = nowMs;
         }
     }
